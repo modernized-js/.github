@@ -1,48 +1,55 @@
 # modernized-js
 
-> Maintained forks of unmaintained npm packages — modernized with full backwards compatibility.
+**Maintained forks of unmaintained npm packages, kept byte-compatible.**
 
-## What we do
+[📦 npm scope: @modernized](https://www.npmjs.com/org/modernized) · [💬 Suggest a package](https://github.com/modernized-js/.github/issues/new)
 
-We pick up npm packages that have been deprecated or abandoned, **modernize the toolchain** (TypeScript, dual ESM + CJS, modern Node, strict lint, native test runner), and **keep the public API byte-compatible** so consumers can swap them in without code changes. Forks are re-published under the [`@modernized`](https://www.npmjs.com/org/modernized) npm scope.
+> [!NOTE]
+> **Drop-in replacement.** Change the import path. That's all.
+>
+> ```diff
+> - import x from 'package';
+> + import x from '@modernized/package';
+> ```
 
 ## Packages
 
-| Package | Original | Status |
-| --- | --- | --- |
-| [`@modernized/jpeg-exif`](https://www.npmjs.com/package/@modernized/jpeg-exif) | [`jpeg-exif`](https://www.npmjs.com/package/jpeg-exif) (deprecated) | ✅ Published |
-| [`@modernized/arxiv-api`](https://www.npmjs.com/package/@modernized/arxiv-api) | `arxiv-api` | ✅ Published |
-| [`node-fluent-ffmpeg`](https://github.com/modernized-js/node-fluent-ffmpeg) | `fluent-ffmpeg` | 🛠 In progress |
-| [`exifr`](https://github.com/modernized-js/exifr) | `exifr` | 🛠 In progress |
+| Package | npm | Original | Status |
+| --- | --- | --- | --- |
+| **`@modernized/jpeg-exif`** | [![npm](https://img.shields.io/npm/v/@modernized/jpeg-exif.svg)](https://www.npmjs.com/package/@modernized/jpeg-exif) [![dl](https://img.shields.io/npm/dm/@modernized/jpeg-exif.svg)](https://www.npmjs.com/package/@modernized/jpeg-exif) | [`jpeg-exif`](https://www.npmjs.com/package/jpeg-exif) (deprecated) | ✅ Published |
+| **`@modernized/arxiv-api`** | [![npm](https://img.shields.io/npm/v/@modernized/arxiv-api.svg)](https://www.npmjs.com/package/@modernized/arxiv-api) [![dl](https://img.shields.io/npm/dm/@modernized/arxiv-api.svg)](https://www.npmjs.com/package/@modernized/arxiv-api) | `arxiv-api` | ✅ Published |
+| `node-fluent-ffmpeg` | — | `fluent-ffmpeg` | 🛠 In progress |
+| `exifr` | — | `exifr` | 🛠 In progress |
 
-## Migration
+## What we do
 
-In most cases, swap the import:
+- 🦺 **TypeScript source** with bundled `.d.ts` — strict typing, no `any`, no `as` casts
+- 📦 **Dual ESM + CJS publish** — both `import` and `require` work out of the box
+- 🟩 **Modern Node** — `engines.node: ">=22"`
+- 🧪 **Native test runner** — `node:test` + `node:assert`, coverage gated in CI (90 / 70 / 90)
+- 🧹 **Strict lint** — ESLint 10 + `unicorn` + `promise`, complexity ≤ 15, max-lines-per-function ≤ 50
+- ✅ **CI matrix** — Linux / macOS / Windows × Node 22 / 24
+- 🔒 **API stays byte-compatible** — no breaking changes; new functionality is additive only
 
-```diff
-- import x from 'package';
-+ import x from '@modernized/package';
-```
+## Suggest a package
 
-That's it — no other code changes needed.
+Got a dependency that's been abandoned and you'd love a modernized fork?
 
-## What "modernized" means
+> [!TIP]
+> **Org-level requests** (please fork X, roadmap ideas) → [`modernized-js/.github` issues](https://github.com/modernized-js/.github/issues)
+>
+> **Package-specific bugs / improvements** → that package's own repo (e.g. [`modernized-js/jpeg-exif`](https://github.com/modernized-js/jpeg-exif/issues))
+>
+> **Or open a PR** with a new fork following the established pattern: TS, dual ESM/CJS, Node 22+, strict lint, native testing.
+
+## How a fork is modernized
 
 Each fork goes through the same arc:
 
-1. **Toolchain swap** — replace legacy build/test deps with modern ones (`node:test`, ESLint 10 strict, Prettier, native coverage).
-2. **TypeScript migration** — typed source with bundled `.d.ts`. No `any`, no `as` casts.
-3. **Dual ESM + CJS publish** — `package.json` `exports` so both `import` and `require` work.
-4. **Modern Node engine** — `engines.node: ">=22"`.
-5. **Refactor for readability** — split monolithic files, drop module-level mutable state, tighten lint thresholds (complexity ≤ 15, max-lines-per-function ≤ 50).
-6. **CI** — Linux / macOS / Windows × Node 22 / 24, with lint + typecheck + build + test + coverage gate.
-7. **Release** — semantic version, tag, GitHub Release, npm publish.
-
-The public API is **never** changed in a breaking way. Additive helpers (e.g. a Promise variant alongside a callback API) are fine.
-
-## Contributing
-
-If a package you depend on is unmaintained and you'd like a modernized fork:
-
-- Open an issue on [the relevant repo](https://github.com/modernized-js)
-- Or PR a new fork following the established pattern (TS, dual ESM/CJS, Node 22+, strict lint, native testing)
+1. Import the upstream tarball into a fresh repo, preserve the original LICENSE / authorship.
+2. Replace the build / test / lint toolchain.
+3. Migrate source to TypeScript (`git mv` so history follows).
+4. Add a dual ESM + CJS build via `tsc` × 2 configs.
+5. Refactor for readability — split monolithic files, drop module-level mutable state.
+6. Tighten lint, gate CI on coverage.
+7. Tag, GitHub Release, npm publish under `@modernized`.
